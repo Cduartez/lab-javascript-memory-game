@@ -32,6 +32,31 @@ var MemoryGame = function() {
     this.pairsClicked = 0;
     this.correctPairs = 0;
 };
+MemoryGame.prototype.shuffleCards = function () {
+  var result = _.shuffle(this.cards);
+  this.cards = result;
+};
+MemoryGame.prototype.selectCard = function (cards) {
+  this.selectedCards.push(cardName);
+  if (this.selectedCards.length === 2){
+    console.log(memoryGame.selectedCards[0] + " - " + memoryGame.selectedCards[1]); // Este mamon se queda
+    memoryGame.compareCards();
+    memoryGame.cleanSelectedCards();
+  }
+  console.log(memoryGame.selectedCards);
+};
+
+MemoryGame.prototype.compareCards = function(){
+  if (this.selectedCards[0] == this.selectedCards[1]){
+    console.log('Correct!');
+  } else {
+    console.log('Incorrect!');
+  }
+};
+MemoryGame.prototype.cleanSelectedCards = function(){
+  this.selectedCards = [];
+  return[this.selectedCards[0], this.selectedCards[1]];
+};
 
 // //******************************************************************
 // // HTML/CSS Interactions
@@ -42,7 +67,7 @@ var memoryGame;
 $(document).ready(function(){
   memoryGame = new MemoryGame();
   var html = '';
-
+  memoryGame.shuffleCards();
   memoryGame.cards.forEach(function(pic, index) {
     var sanitizedName = pic.name.split(' ').join('_');
 
@@ -60,4 +85,17 @@ $(document).ready(function(){
 
   // Add all the divs to the HTML
   document.getElementById('memory_board').innerHTML = html;
+
+  $('.back').on("click",function(){
+    var cardName = $(this).attr('id');
+    memoryGame.selectedCards.push(cardName);
+    if (memoryGame.selectedCards.length == 2){
+        $(".front.back").toggleClass("front");
+       console.log(memoryGame.selectedCards[0] + " - " + memoryGame.selectedCards[1]);
+      memoryGame.compareCards();
+      memoryGame.cleanSelectedCards();
+    }
+    console.log(memoryGame.selectedCards);
+
+  });
 });
